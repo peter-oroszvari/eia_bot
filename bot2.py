@@ -4,6 +4,7 @@ import re
 import discord
 import configparser
 from discord.ext import commands
+from ttf import DataFetcher
 
 def get_natgas_data_and_format_message():
     # Make a GET request to the API and retrieve the data
@@ -28,6 +29,18 @@ def get_natgas_data_and_format_message():
         net_change = series['calculated']['net_change']
         message += f"{name}: {net_change}\n"
     
+    return message
+
+def get_and_format_ttf_message(): 
+    fetcher = DataFetcher()
+    data = fetcher.fetch_ttf_data()
+    message = "Dutch TTF Natural Gas Futures\n\n"
+    for item in data:
+        futures = item['Futures: ']
+        last_price = item['Last Price: ']
+        # print(f'Futures: {futures}, Last Price: {last_price}')
+        message += f"{futures}: {last_price}\n"
+
     return message
 
 # Read the config.ini file
@@ -56,31 +69,9 @@ async def on_message(message):
     
         # Send the message to the channel where the command was used
         await message.channel.send(data)
-
-'''
-@client.event
-async def on_ready():
-  # Make a GET request to the URL
-  response = requests.get("https://ir.eia.gov/ngs/wngsr.json")
-
-  # Check the status code of the response
-  if response.status_code == 200:
-    # Try to load the response text as a JSON object
-    try:
-      data = json.loads(re.sub('ï»¿', '', response.text))
-    except json.decoder.JSONDecodeError:
-      # The response is not a valid JSON object
-      print("Error: the server did not return a valid JSON object")
-  else:
-    # There was an error making the request
-    print("Error loading data from URL (status code: {})".format(response.status_code))
-
-  # Iterate through each series
-  for series in data['series']:
-    # Send a message to the "general" channel with the net change value
-        channel = client.get_channel(908099245402378290)
-        await channel.send('{}: {}'.format(series['name'], series['calculated']['net_change']))
-
-'''
+    
+    elif message.content.startswith("!ttf"):  
+        data = get_and_format_ttf_message()
+        await message.channel.send(data)
 
 client.run(TOKEN)
