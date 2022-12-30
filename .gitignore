@@ -1,2 +1,14 @@
 
 config.ini
+Dockerfile
+docker-compose.yml
+docker-compose.debug.yml
+copilot/environments/test/manifest.yml
+copilot/eiabot/manifest.yml
+bot_aws.py
+bot.py
+Archive.zip
+__pycache__/ttf.cpython-310.pyc
+.vscode/tasks.json
+.vscode/launch.json
+.dockerignore
