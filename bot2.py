@@ -5,6 +5,7 @@ import discord
 import configparser
 from discord.ext import commands
 from ttf import DataFetcher
+from oil_weekly_report import extract_oil_weekly_text
 
 def get_natgas_data_and_format_message():
     # Make a GET request to the API and retrieve the data
@@ -73,5 +74,19 @@ async def on_message(message):
     elif message.content.startswith("!ttf"):  
         data = get_and_format_ttf_message()
         await message.channel.send(data)
+
+    elif message.content.startswith("!oilreport"):
+        text = extract_oil_weekly_text()
+        print(len(text))
+        
+        MAX_LENGTH = 1500
+
+        # Split the text into chunks
+        chunks = [text[i:i+MAX_LENGTH] for i in range(0, len(text), MAX_LENGTH)]
+
+        # Send each chunk as a separate message
+        for chunk in chunks:
+            # Send the message (code for this step goes here)
+            await message.channel.send(chunk)
 
 client.run(TOKEN)
