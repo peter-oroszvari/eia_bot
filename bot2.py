@@ -6,6 +6,7 @@ import configparser
 from discord.ext import commands
 from ttf import DataFetcher
 from oil_weekly_report import extract_oil_weekly_text
+from natgasweather import get_natgasweather
 
 def get_natgas_data_and_format_message():
     # Make a GET request to the API and retrieve the data
@@ -88,5 +89,16 @@ async def on_message(message):
         for chunk in chunks:
             # Send the message (code for this step goes here)
             await message.channel.send(chunk)
+
+    elif message.content.startswith("!ng"):
+        natgaseather_update = get_natgasweather()
+        headline = natgaseather_update['headline']
+        print(headline)
+        await message.channel.send(headline)
+        daily_update = natgaseather_update['daily_update']
+        await message.channel.send(daily_update)
+
+
+
 
 client.run(TOKEN)
