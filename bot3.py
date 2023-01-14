@@ -1,5 +1,5 @@
 import discord
-from discord import app_commands 
+from discord import app_commands, Embed
 import configparser
 import requests
 import json
@@ -50,7 +50,7 @@ def get_and_format_ttf_message():
     """
     fetcher = DataFetcher()
     data = fetcher.fetch_ttf_data()
-    message = "Dutch TTF Natural Gas Futures\n\n"
+    message = ""
     for item in data:
         futures = item['Futures: ']
         last_price = item['Last Price: ']
@@ -88,13 +88,25 @@ tree = app_commands.CommandTree(client)
 async def slash2(interaction: discord.Interaction):
     # Get the data from the API and format it as a message
     data = get_natgas_data_and_format_message()
+     # Create a Discord embed message
+    embed = Embed(
+        title="Weekly Natural Gas Storage report", 
+        description=data,
+        )
+    embed.set_footer(text = "Source: EIA")
     # Send the message to the channel where the command was used
-    await interaction.response.send_message(data) 
+    await interaction.response.send_message(embed=embed) 
 
 @tree.command(guild = discord.Object(id=guild_id), name = 'ttf', description='Prints to up to date Dutch TTF futures prices') #guild specific slash command
 async def slash2(interaction: discord.Interaction):
     data = get_and_format_ttf_message()
-    await interaction.response.send_message(data) 
+    # Create a Discord embed message
+    embed = Embed(
+        title="Dutch TTF Natural Gas futures", 
+        description=data,
+        )
+    embed.set_footer(text = "Source: theice.com")
+    await interaction.response.send_message(embed=embed) 
 
 @tree.command(guild = discord.Object(id=guild_id), name = 'oilreport', description='Prints the weekly petroleum status report') #guild specific slash command
 async def slash2(interaction: discord.Interaction):
@@ -116,12 +128,22 @@ async def slash2(interaction: discord.Interaction):
 @tree.command(guild = discord.Object(id=guild_id), name = 'ngweather', description='Prints the headline and daily update from natgasweather.com') #guild specific slash command
 async def slash2(interaction: discord.Interaction):
     await interaction.response.send_message(f'Retriving data from natgasweather.com') 
-
+    natgaseather_update = get_natgasweather()
+    headline = natgaseather_update['headline']
+    daily_update = natgaseather_update['daily_update']
+    embed = Embed(
+        title=headline, 
+        description=daily_update,
+        )
+    embed.set_footer(text = "Source: Natgasweather.com")
+    await interaction.channel.send(embed=embed)
+    '''
     natgaseather_update = get_natgasweather()
     headline = natgaseather_update['headline']
     await interaction.channel.send(headline)
     daily_update = natgaseather_update['daily_update']
     await interaction.channel.send(daily_update)
+    '''
 
 
 client.run(TOKEN)
