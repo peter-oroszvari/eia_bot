@@ -137,13 +137,5 @@ async def slash2(interaction: discord.Interaction):
         )
     embed.set_footer(text = "Source: Natgasweather.com")
     await interaction.channel.send(embed=embed)
-    '''
-    natgaseather_update = get_natgasweather()
-    headline = natgaseather_update['headline']
-    await interaction.channel.send(headline)
-    daily_update = natgaseather_update['daily_update']
-    await interaction.channel.send(daily_update)
-    '''
-
 
 client.run(TOKEN)
