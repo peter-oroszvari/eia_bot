@@ -13,3 +13,4 @@ __pycache__/ttf.cpython-310.pyc
 .vscode/launch.json
 .dockerignore
 __pycache__/natgasweather.cpython-310.pyc
+*.pyc
