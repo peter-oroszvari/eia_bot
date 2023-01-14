@@ -55,6 +55,8 @@ TOKEN = config["DISCORD"]["TOKEN"]
 # Create a Discord client
 client = discord.Client(intents=discord.Intents.all())
 
+
+
 @client.event
 async def on_ready():
     print(f'{client.user} has connected to Discord!')
@@ -93,12 +95,9 @@ async def on_message(message):
     elif message.content.startswith("!ng"):
         natgaseather_update = get_natgasweather()
         headline = natgaseather_update['headline']
-        print(headline)
         await message.channel.send(headline)
         daily_update = natgaseather_update['daily_update']
         await message.channel.send(daily_update)
-
-
 
 
 client.run(TOKEN)
