@@ -9,6 +9,13 @@ from oil_weekly_report import extract_oil_weekly_text
 from natgasweather import get_natgasweather
 
 def get_natgas_data_and_format_message():
+    """
+    This function retrieves data from the "https://ir.eia.gov/ngs/wngsr.json" API and formats it as a message.
+    The function makes a GET request to the API and retrieves the data.
+    It then checks if the response status code is 200, if it is, it attempts to load the response text as a JSON object.
+    If the response status code is not 200 or if the response text is not a valid JSON object, it prints an error message.
+    If the response is valid, the function formats the data as a message and returns it.
+    """
     # Make a GET request to the API and retrieve the data
     response = requests.get("https://ir.eia.gov/ngs/wngsr.json")
     
@@ -34,6 +41,13 @@ def get_natgas_data_and_format_message():
     return message
 
 def get_and_format_ttf_message(): 
+    """
+    This function retrieves data from the DataFetcher class and formats it as a message.
+    It creates an instance of the DataFetcher class and retrieves the data by calling the fetch_ttf_data() method.
+    The function then formats the data as a message, adding the title "Dutch TTF Natural Gas Futures" and appending
+    the "futures" and "last price" information for each item in the data.
+    The function returns the formatted message.
+    """
     fetcher = DataFetcher()
     data = fetcher.fetch_ttf_data()
     message = "Dutch TTF Natural Gas Futures\n\n"
