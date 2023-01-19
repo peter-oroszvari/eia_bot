@@ -16,14 +16,12 @@ def get_natgasweather():
        print("No headline found.")
     '''
 
-    daily_update = soup.select_one("div:nth-of-type(5) article div div section:nth-of-type(3) div div:nth-of-type(1) div:nth-of-type(3) div p")
-    
+    daily_update = soup.select_one("div:nth-of-type(5) article div div section:nth-of-type(3) div div:nth-of-type(1) div:nth-of-type(3) div")
     ''''
     if daily_update:
         print(daily_update.text)
-     else:
+    else:
         print("No daily update found.")
-    '''
+   '''
+    
     return {'headline': headline.text, 'daily_update':daily_update.text}
-
-
