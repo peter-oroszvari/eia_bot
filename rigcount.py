@@ -24,6 +24,7 @@ except requests.exceptions.RequestException as err:
     print ("Something went wrong:",err)
     sys.exit(1)
 
+# Extract the data from the <tr> elements
 
 table_data = []
 for row in soup.find('table').find_all('tr')[1:]:
@@ -37,6 +38,8 @@ headers = [th.text for th in soup.find('thead').find_all('th')]
 result = []
 for data in table_data:
     result.append(dict(zip(headers, data)))
+
+# Cleaning the unneeded line breaks and whitespaces from the result
 
 cleaned_result = []
 for row in result:
