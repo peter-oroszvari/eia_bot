@@ -1,4 +1,4 @@
-import rigcount_model
+from . import rigcount_model
 
 class RigCountController:
     def __init__(self):

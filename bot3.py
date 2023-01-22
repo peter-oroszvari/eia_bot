@@ -7,6 +7,10 @@ import re
 from ttf import DataFetcher
 from oil_weekly_report import extract_oil_weekly_text
 from natgasweather import get_natgasweather
+from rigcount.rigcount_view import display_data
+from PIL import Image
+import io
+
 
 def get_natgas_data_and_format_message():
     """
@@ -137,5 +141,21 @@ async def slash2(interaction: discord.Interaction):
         )
     embed.set_footer(text = "Source: Natgasweather.com")
     await interaction.channel.send(embed=embed)
+
+@tree.command(guild = discord.Object(id=guild_id), name = 'rigcount', description='Retrieves the Baker Hughes Rig Count Overview') #guild specific slash command
+async def slash2(interaction: discord.Interaction):
+    await interaction.response.send_message(f'Retriving the Rig Count Overview') 
+   
+    rigcount = display_data()
+
+    img = Image.open("dataframe.png")
+    # Create a binary stream of the image
+    img_bytes = io.BytesIO()
+    img.save(img_bytes, format='PNG')
+    img_bytes.seek(0)
+    
+    # await interaction.channel.send(rigcount)
+    await interaction.channel.send(file=discord.File(img_bytes, "dataframe.png"))
+
 
 client.run(TOKEN)

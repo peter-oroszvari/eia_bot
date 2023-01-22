@@ -42,4 +42,9 @@ class RigCountModel:
             row['Date of Prior Count'] = row['Date of Prior Count'].replace('\n', ' ').replace('\t', '')
             row["Date of Last Year's Count"] = row["Date of Last Year's Count"].replace('\n', ' ').replace('\t', '')
             cleaned_result.append(row)
-        return cleaned_result
+
+        
+        columns_to_keep = ['Area', 'Last Count', 'Count', 'Change from Prior Count']
+        filtered_data = [{k: v for k, v in row.items() if k in columns_to_keep} for row in cleaned_result]
+
+        return filtered_data
