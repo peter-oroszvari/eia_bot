@@ -3,7 +3,6 @@ from .rigcount_controller import RigCountController
 import pandas as pd
 import dataframe_image as dfi
 
-
 def display_data():
     controller = RigCountController()
     data = controller.get_rig_count_data()
@@ -11,6 +10,9 @@ def display_data():
          rigcount = tabulate.tabulate(data, headers='keys', tablefmt='fancy_grid')
          print(rigcount)
          df = pd.DataFrame(data)
+         df = df.set_index('Area')
+         df.style.set_properties(align='center')
+         
          print(df)
          dfi.export(df, 'dataframe.png')
 

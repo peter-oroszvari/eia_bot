@@ -4,10 +4,10 @@ import configparser
 import requests
 import json
 import re
-from ttf import DataFetcher
-from oil_weekly_report import extract_oil_weekly_text
+from eia.oil_weekly_report import extract_oil_weekly_text
 from natgasweather import get_natgasweather
 from rigcount.rigcount_view import display_data
+from ice.ttf_controller import TTFController
 from PIL import Image
 import io
 
@@ -42,25 +42,6 @@ def get_natgas_data_and_format_message():
         net_change = series['calculated']['net_change']
         message += f"{name}: {net_change}\n"
     
-    return message
-
-def get_and_format_ttf_message(): 
-    """
-    This function retrieves data from the DataFetcher class and formats it as a message.
-    It creates an instance of the DataFetcher class and retrieves the data by calling the fetch_ttf_data() method.
-    The function then formats the data as a message, adding the title "Dutch TTF Natural Gas Futures" and appending
-    the "futures" and "last price" information for each item in the data.
-    The function returns the formatted message.
-    """
-    fetcher = DataFetcher()
-    data = fetcher.fetch_ttf_data()
-    message = ""
-    for item in data:
-        futures = item['Futures: ']
-        last_price = item['Last Price: ']
-        # print(f'Futures: {futures}, Last Price: {last_price}')
-        message += f"{futures}: {last_price}\n"
-
     return message
 
 # Read the config.ini file
@@ -103,7 +84,10 @@ async def slash2(interaction: discord.Interaction):
 
 @tree.command(guild = discord.Object(id=guild_id), name = 'ttf', description='Prints to up to date Dutch TTF futures prices') #guild specific slash command
 async def slash2(interaction: discord.Interaction):
-    data = get_and_format_ttf_message()
+    
+    controller = TTFController()
+    data = controller.get_formatted_data()
+    print(data)
     # Create a Discord embed message
     embed = Embed(
         title="Dutch TTF Natural Gas futures", 
@@ -117,7 +101,6 @@ async def slash2(interaction: discord.Interaction):
     await interaction.response.send_message(f'Retriving the Weekly Petroleum Status Report') 
 
     text = extract_oil_weekly_text()
-    print(len(text))
         
     MAX_LENGTH = 1500
 
