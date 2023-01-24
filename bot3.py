@@ -5,7 +5,7 @@ import requests
 import json
 import re
 from eia.oil_weekly_report import extract_oil_weekly_text
-from natgasweather import get_natgasweather
+from natgasweather.natgasweather import get_natgasweather
 from rigcount.rigcount_view import display_data
 from ice.ttf_controller import TTFController
 from PIL import Image
