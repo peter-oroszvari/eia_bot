@@ -1,8 +1,8 @@
-from . import rigcount_model
+from .rigcount_model import RigCountModel
 
 class RigCountController:
     def __init__(self):
-        self.model = rigcount_model.RigCountModel()
+        self.model = RigCountModel()
 
     def get_rig_count_data(self):
         try:

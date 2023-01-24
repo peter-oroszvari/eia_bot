@@ -5,9 +5,12 @@ import requests
 import json
 import re
 from eia.oil_weekly_report import extract_oil_weekly_text
+
 from natgasweather.natgasweather import get_natgasweather
-from rigcount.rigcount_view import display_data
+
 from ice.ttf_controller import TTFController
+from rigcount.rigcount_controller import RigCountController
+from eia.ng_storage_report_controller import NGController
 from PIL import Image
 import io
 
@@ -72,7 +75,8 @@ tree = app_commands.CommandTree(client)
 @tree.command(guild = discord.Object(id=guild_id), name = 'natgas', description='Prints the up to date Weekly Natural Gas Storage Report') #guild specific slash command
 async def slash2(interaction: discord.Interaction):
     # Get the data from the API and format it as a message
-    data = get_natgas_data_and_format_message()
+    controller = NGController()
+    data = controller.get_formatted_data()
      # Create a Discord embed message
     embed = Embed(
         title="Weekly Natural Gas Storage report", 
@@ -129,7 +133,8 @@ async def slash2(interaction: discord.Interaction):
 async def slash2(interaction: discord.Interaction):
     await interaction.response.send_message(f'Retriving the Rig Count Overview') 
    
-    rigcount = display_data()
+    #controller = RigCountController()
+    #data = controller.get_rig_count_data()
 
     img = Image.open("dataframe.png")
     # Create a binary stream of the image
