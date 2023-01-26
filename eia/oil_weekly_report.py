@@ -1,4 +1,3 @@
-import requests
 import io
 import re
 import PyPDF2

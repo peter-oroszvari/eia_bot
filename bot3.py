@@ -133,8 +133,8 @@ async def slash2(interaction: discord.Interaction):
 async def slash2(interaction: discord.Interaction):
     await interaction.response.send_message(f'Retriving the Rig Count Overview') 
    
-    #controller = RigCountController()
-    #data = controller.get_rig_count_data()
+    controller = RigCountController()
+    controller.display_data()
 
     img = Image.open("dataframe.png")
     # Create a binary stream of the image
