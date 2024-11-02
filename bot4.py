@@ -14,13 +14,24 @@ logger = setup_logger()
 class EnergyBot(discord.Client):
     def __init__(self):
         intents = discord.Intents.default()
+        intents.message_content = True  # Enable message content intent
         super().__init__(intents=intents)
         self.tree = app_commands.CommandTree(self)
-        self.synced = False
 
     async def setup_hook(self):
-        await self.tree.sync(guild=discord.Object(id=int(os.getenv("GUILD_ID"))))
-        self.synced = True
+        # This is called before the bot starts
+        register_commands(self.tree)
+
+        # Sync commands with Discord
+        guild_id = os.getenv("GUILD_ID")
+        if guild_id:
+            guild = discord.Object(id=int(guild_id))
+            self.tree.copy_global_to(guild=guild)
+            await self.tree.sync(guild=guild)
+            logger.info(f"Synced commands to guild {guild_id}")
+        else:
+            await self.tree.sync()
+            logger.info("Synced commands globally")
 
     async def on_ready(self):
         logger.info(f"Logged in as {self.user} (ID: {self.user.id})")
@@ -29,7 +40,6 @@ class EnergyBot(discord.Client):
 
 async def main():
     async with EnergyBot() as client:
-        register_commands(client.tree)
         await client.start(os.getenv("DISCORD_TOKEN"))
 
 

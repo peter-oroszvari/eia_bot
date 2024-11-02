@@ -12,6 +12,11 @@ logger = get_logger(__name__)
 
 
 def register_commands(tree: app_commands.CommandTree):
+    @tree.command(name="ping", description="Check if the bot is responsive")
+    async def ping(interaction: discord.Interaction):
+        await interaction.response.send_message("Pong!")
+        logger.info("Ping command executed")
+
     @tree.command(
         name="natgas",
         description="Prints the up-to-date Weekly Natural Gas Storage Report",
@@ -97,3 +102,5 @@ def register_commands(tree: app_commands.CommandTree):
             await interaction.followup.send(
                 "An error occurred while fetching the rig count data."
             )
+
+    logger.info(f"Registered {len(tree.get_commands())} commands")
