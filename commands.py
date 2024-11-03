@@ -57,16 +57,31 @@ def register_commands(tree: app_commands.CommandTree):
         await interaction.response.defer()
         try:
             text = extract_oil_weekly_text()
-            MAX_LENGTH = 1500
+
+            if text.startswith("Error"):
+                await interaction.followup.send(text)
+                return
+
+            MAX_LENGTH = 1900  # Increased to 1900 to maximize Discord's message limit
             chunks = [text[i : i + MAX_LENGTH] for i in range(0, len(text), MAX_LENGTH)]
-            await interaction.followup.send("Weekly Petroleum Status Report:")
-            for chunk in chunks:
-                await interaction.followup.send(chunk)
-        except Exception as e:
-            logger.error(f"Error in oilreport command: {str(e)}")
-            await interaction.followup.send(
-                "An error occurred while fetching the oil report."
+
+            embed = discord.Embed(
+                title="Weekly Petroleum Status Report", color=0x00FF00
             )
+            await interaction.followup.send(embed=embed)
+
+            for i, chunk in enumerate(chunks, 1):
+                formatted_chunk = f"```\n{chunk}\n```"
+                await interaction.followup.send(formatted_chunk)
+
+            logger.info(
+                f"Oilreport command successfully executed by {interaction.user.name} (ID: {interaction.user.id})"
+            )
+
+        except Exception as e:
+            error_message = f"```diff\n- An error occurred while fetching the oil report. Please try again later.\n```"
+            await interaction.followup.send(error_message)
+            logger.error(f"Error in oilreport command: {str(e)}", exc_info=True)
 
     @tree.command(
         name="ngweather",

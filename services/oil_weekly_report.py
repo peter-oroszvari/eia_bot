@@ -1,24 +1,28 @@
 import requests
 from PyPDF2 import PdfReader
 from io import BytesIO
+import re
 from utils.logger import get_logger
 
 logger = get_logger(__name__)
 
 
 def extract_oil_weekly_text():
+    url = "https://ir.eia.gov/wpsr/wpsrsummary.pdf"
+
     try:
-        url = "https://www.eia.gov/petroleum/weekly/pdf/wpsummary.pdf"
-        response = requests.get(url)
+        response = requests.get(url, timeout=10)
         response.raise_for_status()
 
         pdf = PdfReader(BytesIO(response.content))
-        text = ""
-        for page in pdf.pages:
-            text += page.extract_text()
+        text = "".join(page.extract_text() for page in pdf.pages)
 
-        return text
-
+        # Clean up the text
+        text = re.sub(r"\s+", " ", text)
+        return text.strip()
+    except requests.RequestException as e:
+        logger.error(f"Error downloading PDF from {url}: {str(e)}")
     except Exception as e:
-        logger.error(f"Error extracting oil weekly report: {str(e)}")
-        return "Error extracting oil weekly report. Please try again later."
+        logger.error(f"Error extracting text from PDF: {str(e)}")
+
+    return "Error extracting oil weekly report. Please try again later."
