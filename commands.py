@@ -7,7 +7,9 @@ from services.oil_weekly_report import extract_oil_weekly_text
 from services.natgasweather import get_natgasweather
 from utils.image_handler import save_and_send_image
 from utils.logger import get_logger
+from utils.logger import setup_logger
 
+main_logger = setup_logger()
 logger = get_logger(__name__)
 
 
@@ -82,6 +84,8 @@ def register_commands(tree: app_commands.CommandTree):
             error_message = f"```diff\n- An error occurred while fetching the oil report. Please try again later.\n```"
             await interaction.followup.send(error_message)
             logger.error(f"Error in oilreport command: {str(e)}", exc_info=True)
+
+        logger.debug("Oilreport command execution completed")
 
     @tree.command(
         name="ngweather",
